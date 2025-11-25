@@ -1,20 +1,23 @@
-
-use serenity::async_trait;
+use serenity::{async_trait, builder};
 use serenity::model::channel::Message;
 use serenity::model::gateway::{Ready};
+use serenity::builder::{CreateEmbed, CreateMessage};
 use serenity::prelude::*;
 
 struct Handler;
 
 #[async_trait]
 impl EventHandler for Handler {
-    async fn ready(&self, _: Context, ready: Ready) {
+    async fn ready(&self, ctx: Context, ready: Ready) {
+        ctx.dnd();
         println!("{} is connected!", ready.user.name);
     }
-
+    
     async fn message(&self, ctx: Context, msg: Message) {
         if msg.content == "!ping" {
-            if let Err(why) = msg.channel_id.say(&ctx.http, "Pong!").await {
+            let embed = CreateEmbed::new().description("Pong!").color((50, 54, 168));
+            let builder = CreateMessage::new().embed(embed);
+            if let Err(why) = msg.channel_id.send_message(&ctx.http, builder).await {
                 println!("Error sending message: {why:?}");
             }
         }
@@ -30,11 +33,9 @@ async fn main() {
     let intents = GatewayIntents::GUILD_MESSAGES
         | GatewayIntents::DIRECT_MESSAGES
         | GatewayIntents::MESSAGE_CONTENT;
-
     // Create a new instance of the Client, logging in as a bot.
     let mut client =
         Client::builder(&token, intents).event_handler(Handler).await.expect("Err creating client");
-
     // Start listening for events by starting a single shard
     if let Err(why) = client.start().await {
         println!("Client error: {why:?}");
