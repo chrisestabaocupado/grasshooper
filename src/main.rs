@@ -15,6 +15,7 @@ impl EventHandler for Handler {
     }
     
     async fn message(&self, ctx: Context, msg: Message) {
+        dotenvy::dotenv().ok();
         match msg.content.as_str() {
             "!ping" => {
                 commands::ping::run(ctx, msg).await;
