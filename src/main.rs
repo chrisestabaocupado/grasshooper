@@ -1,9 +1,10 @@
-use serenity::{async_trait, builder};
+use serenity::{async_trait};
 use serenity::model::channel::Message;
 use serenity::model::gateway::{Ready};
-use serenity::builder::{CreateEmbed, CreateMessage};
 use serenity::prelude::*;
 
+mod commands;
+mod utils;
 struct Handler;
 
 #[async_trait]
@@ -14,12 +15,11 @@ impl EventHandler for Handler {
     }
     
     async fn message(&self, ctx: Context, msg: Message) {
-        if msg.content == "!ping" {
-            let embed = CreateEmbed::new().description("Pong!").color((50, 54, 168));
-            let builder = CreateMessage::new().embed(embed);
-            if let Err(why) = msg.channel_id.send_message(&ctx.http, builder).await {
-                println!("Error sending message: {why:?}");
-            }
+        match msg.content.as_str() {
+            "!ping" => {
+                commands::ping::run(ctx, msg).await;
+            },
+            _ => {}
         }
     }
 }
