@@ -20,6 +20,9 @@ impl EventHandler for Handler {
             "!ping" => {
                 commands::ping::run(ctx, msg).await;
             },
+            "!test" => {
+                commands::test::run(ctx, msg).await;
+            }
             _ => {}
         }
     }

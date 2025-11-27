@@ -11,3 +11,4 @@ serenity = "0.12"
 tokio = { version = "1.21.2", features = ["macros", "rt-multi-thread"] }
 chrono = "0.4.42"
 ping = "0.7.0"
+notion-client = "1.0.11"
