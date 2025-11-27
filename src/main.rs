@@ -22,7 +22,7 @@ impl EventHandler for Handler {
             },
             "!test" => {
                 commands::test::run(ctx, msg).await;
-            },
+            }
             _ => {}
         }
     }
